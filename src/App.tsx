@@ -1,10 +1,10 @@
-import React from 'react';
-import { WelcomeScreen } from './components/WelcomeScreen';
-import { TestQuestion } from './components/TestQuestion';
-import { TestResults } from './components/TestResults';
-import { MarketingPause } from './components/MarketingPause';
-import { useTest } from './hooks/useTest';
-import { questions } from './data/questions';
+import React from "react"
+import { WelcomeScreen } from "./components/WelcomeScreen"
+import { TestQuestion } from "./components/TestQuestion"
+import { TestResults } from "./components/TestResults"
+import { MarketingPause } from "./components/MarketingPause"
+import { useTest } from "./hooks/useTest"
+import { questions } from "./data/questions"
 
 function App() {
   const {
@@ -22,25 +22,29 @@ function App() {
     continueAfterPause,
     calculateResults,
     startTest,
-    resetTest
-  } = useTest(questions);
+    resetTest,
+    fillAllRandomly, // Destructure the new function
+    answers, // Destructure answers from useTest
+  } = useTest(questions)
 
   if (!userInfo) {
-    return <WelcomeScreen onStart={startTest} />;
+    return <WelcomeScreen onStart={startTest} />
   }
 
   if (showMarketingPause) {
-    return <MarketingPause onContinue={continueAfterPause} />;
+    return <MarketingPause onContinue={continueAfterPause} />
   }
   if (isComplete) {
-    const results = calculateResults();
+    const results = calculateResults()
     return (
-      <TestResults 
-        result={results} 
-        userInfo={userInfo} 
+      <TestResults
+        result={results}
+        userInfo={userInfo}
         onRestart={resetTest}
+        questions={questions}
+        userAnswers={answers}
       />
-    );
+    )
   }
 
   return (
@@ -54,8 +58,9 @@ function App() {
       selectedAnswer={selectedAnswer}
       canGoNext={canGoNext}
       canGoPrevious={canGoPrevious}
+      onFillAllRandomly={fillAllRandomly} // Pass the new function
     />
-  );
+  )
 }
 
-export default App;
+export default App
