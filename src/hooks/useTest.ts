@@ -84,11 +84,14 @@ export const useTest = (questions: Question[]) => {
       )
     })
 
-    // Determine level
-    let level = "Beginner"
-    if (score >= 80) level = "A2"
-    else if (score >= 60) level = "A1"
-    else level = "Pre-A1"
+    // Determine level based on score percentage
+    let level = "A1" // Default to A1 if score is 0-10%
+    if (score > 90) level = "C2"
+    else if (score > 70) level = "C1"
+    else if (score > 50) level = "B2"
+    else if (score > 35) level = "B1"
+    else if (score > 10) level = "A2"
+    else level = "A1"
 
     // Generate recommendations
     const recommendations = generateRecommendations(score, sectionScores)
@@ -107,34 +110,37 @@ export const useTest = (questions: Question[]) => {
   const generateRecommendations = (score: number, sectionScores: any): string[] => {
     const recommendations: string[] = []
 
-    if (score >= 80) {
-      recommendations.push("Excelente trabalho! Você tem uma base sólida em inglês.")
-      recommendations.push("Continue praticando com textos mais complexos para avançar para o nível B1.")
-      recommendations.push("O Word Marathon pode ajudar você a expandir seu vocabulário para o próximo nível.")
-    } else if (score >= 60) {
-      recommendations.push("Bom trabalho! Você tem conhecimentos básicos sólidos.")
-      recommendations.push("Foque em expandir seu vocabulário e praticar conversação.")
+    if (score > 90) {
+      recommendations.push("Excelente trabalho! vc é fluente em ingles.")
+      recommendations.push(
+        "Para assegurar isso oferecemos uma avaliação de conversação gratuita. Entre em contato e agende a sua avaliação. +55 11 99672-7007."
+      )
+    } else if (score > 70) {
+      recommendations.push("Seu nível de inglês é avançado (C1). Você se comunica com fluência e eficácia.")
+      recommendations.push(
+        "Foque em nuances da língua e vocabulário específico para contextos acadêmicos ou profissionais."
+      )
+    } else if (score > 50) {
+      recommendations.push(
+        "Seu nível de inglês é intermediário superior (B2). Você já consegue se comunicar com fluência e espontaneidade."
+      )
+      recommendations.push(
+        "Pratique a conversação em situações diversas e aprofunde seus conhecimentos em áreas específicas."
+      )
+    } else if (score > 35) {
+      recommendations.push("Seu nível de inglês é intermediário (B1). Você tem um bom domínio do inglês básico.")
+      recommendations.push("Foque em expandir seu vocabulário e praticar conversação para avançar.")
       recommendations.push("O Word Marathon é perfeito para acelerar seu aprendizado de vocabulário.")
-    } else if (score >= 40) {
-      recommendations.push("Você está no caminho certo! Continue estudando os fundamentos.")
-      recommendations.push("Pratique gramática básica e vocabulário essencial diariamente.")
+    } else if (score > 10) {
+      recommendations.push("Seu nível de inglês é elementar (A2). Você consegue se comunicar em situações simples.")
+      recommendations.push(
+        "Continue estudando os fundamentos e pratique gramática básica e vocabulário essencial diariamente."
+      )
       recommendations.push("Uma imersão como o Word Marathon pode acelerar significativamente seu progresso.")
     } else {
-      recommendations.push("Não se preocupe! Todo mundo começa em algum lugar.")
+      recommendations.push("Seu nível de inglês é iniciante (A1). Não se preocupe! Todo mundo começa em algum lugar.")
       recommendations.push("Comece com o alfabeto, números e palavras básicas do dia a dia.")
       recommendations.push("O Word Marathon oferece uma base sólida de vocabulário para iniciantes.")
-    }
-
-    // Section-specific recommendations
-    if (sectionScores.grammar < 60) {
-      recommendations.push("Foque nos tempos verbais básicos: presente simples e contínuo.")
-    }
-    if (sectionScores.vocabulary < 60) {
-      recommendations.push("Aprenda 10 palavras novas por dia e pratique com flashcards.")
-      recommendations.push("O Word Marathon ensina vocabulário de forma sistemática e eficiente.")
-    }
-    if (sectionScores.reading < 60) {
-      recommendations.push("Leia textos simples em inglês diariamente, como notícias básicas.")
     }
 
     // Add personalized recommendations based on user info

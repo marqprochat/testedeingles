@@ -221,13 +221,19 @@ ${result.recommendations.map((rec) => `- ${rec}`).join("\n")}
   const getLevelDescription = (level: string) => {
     switch (level) {
       case "A1":
-        return "Iniciante - Você tem conhecimentos básicos de inglês"
+        return "Iniciante - Você tem conhecimentos básicos de inglês."
       case "A2":
-        return "Elementar - Você consegue se comunicar em situações simples"
+        return "Elementar - Você consegue se comunicar em situações simples do dia a dia."
       case "B1":
-        return "Intermediário - Você tem um bom domínio do inglês básico"
+        return "Intermediário - Você tem um bom domínio do inglês básico e consegue se comunicar em diversas situações."
+      case "B2":
+        return "Intermediário Superior - Você é capaz de se comunicar com fluência e espontaneidade em diversas situações."
+      case "C1":
+        return "Avançado - Você domina o inglês e consegue se comunicar de forma eficaz em contextos complexos."
+      case "C2":
+        return "Proficiência - Você tem um domínio completo do inglês, equivalente a um falante nativo."
       default:
-        return "Continue estudando para melhorar seu nível"
+        return "Nível não determinado. Continue estudando para melhorar seu nível."
     }
   }
 
