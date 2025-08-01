@@ -53,11 +53,71 @@ export const TestResults: React.FC<TestResultsProps> = ({ result, userInfo, onRe
     }
   }
 
+  const generateStudentEmailContent = () => {
+    let textContent = `
+Olá ${userInfo.name}!
+
+Parabéns por completar o teste de inglês! Aqui estão seus resultados detalhados:
+
+📊 RESULTADO GERAL:
+- Pontuação Total: ${result.score}/100
+- Respostas Corretas: ${result.correctAnswers} de ${result.totalQuestions}
+- Nível Estimado: ${result.level}
+
+📈 DESEMPENHO POR SEÇÃO:
+- Gramática: ${result.sectionScores.grammar}%
+- Vocabulário: ${result.sectionScores.vocabulary}%
+- Leitura: ${result.sectionScores.reading}%
+
+✅ ACERTOS E ERROS DETALHADOS:
+`
+
+    questions.forEach((question, index) => {
+      const userAnswerIndex = userAnswers[index]
+      const isCorrect = userAnswerIndex === question.correct
+      const userAnswerText = userAnswerIndex !== undefined ? question.options[userAnswerIndex] : "Não respondido"
+      const correctAnswerText = question.options[question.correct]
+      const status = isCorrect ? "✅ CORRETA" : "❌ INCORRETA"
+
+      textContent += `
+Questão ${index + 1}: ${question.question}
+Sua Resposta: ${userAnswerText} - ${status}
+${!isCorrect ? `Resposta Correta: ${correctAnswerText}` : ""}
+`
+    })
+
+    textContent += `
+
+💡 RECOMENDAÇÕES PERSONALIZADAS:
+${result.recommendations.map((rec) => `• ${rec}`).join("\n")}
+
+🏆 CONVITE ESPECIAL - WORD MARATHON! 🏆
+
+Que tal acelerar seu aprendizado de inglês? 
+
+Você está convidado(a) para participar do nosso curso WORD MARATHON - um método revolucionário para dominar vocabulário em inglês de forma rápida e eficiente!
+
+✨ O que você vai aprender:
+• Técnicas avançadas de memorização
+• Estratégias para expandir vocabulário rapidamente
+• Métodos para fixar palavras na memória de longo prazo
+• Sistema progressivo de aprendizado
+
+🎯 Perfeito para seu nível ${result.level}!
+
+📞 Para mais informações e inscrições, entre em contato conosco!
+
+Continue estudando e alcance a fluência que você merece!
+
+Atenciosamente,
+Equipe MoreEnglish 📚
+`
+    return textContent
+  }
+
   const handleSendStudentEmail = async () => {
-    const success = await sendEmail(
-      userInfo.email,
-      `Resultados do teste de inglês para ${userInfo.name}: Pontuação ${result.score}/100, Nível ${result.level}.`
-    )
+    const emailContent = generateStudentEmailContent()
+    const success = await sendEmail(userInfo.email, emailContent)
     if (success) {
       setEmailSent(true)
     }
@@ -98,10 +158,6 @@ Resultados do Teste:
 - Respostas Corretas: ${result.correctAnswers} de ${result.totalQuestions}
 - Nível Estimado: ${result.level}
 
-Desempenho por Seção:
-- Gramática: ${result.sectionScores.grammar}%
-- Vocabulário: ${result.sectionScores.vocabulary}%
-- Leitura: ${result.sectionScores.reading}%
 
 Detalhes das Perguntas:
 `
