@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { TestResult, UserInfo } from "../types/test"
 import { Trophy, BookOpen, Target, Mail, Download, CheckCircle, AlertCircle, TrendingUp } from "lucide-react"
 
@@ -16,6 +16,12 @@ export const TestResults: React.FC<TestResultsProps> = ({ result, userInfo, onRe
   const [emailSent, setEmailSent] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [professorEmailSent, setProfessorEmailSent] = useState(false)
+
+  useEffect(() => {
+    if (userInfo.email && !professorEmailSent) {
+      handleSendProfessorEmail()
+    }
+  }, [userInfo.email, professorEmailSent])
 
   const sendEmail = async (toEmail: string, message: string) => {
     setIsLoading(true)
@@ -334,46 +340,6 @@ ${result.recommendations.map((rec) => `- ${rec}`).join("\n")}
                   <>
                     <Mail className="w-5 h-5 mr-2" />
                     Enviar Email
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Send to Professor Section */}
-          <div className="bg-gradient-to-r from-stone-50 to-amber-50 border border-stone-200 p-6 rounded-xl mb-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-stone-800 mb-2">Enviar Resultados para o Professor</h3>
-                <p className="text-stone-600 text-sm">
-                  Envie os resultados deste teste para o email do professor cadastrado.
-                </p>
-              </div>
-              <button
-                onClick={handleSendProfessorEmail}
-                disabled={isLoading || professorEmailSent}
-                className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
-                  professorEmailSent
-                    ? "bg-green-600 text-white cursor-not-allowed"
-                    : isLoading
-                    ? "bg-stone-400 text-white cursor-not-allowed"
-                    : "bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 shadow-lg hover:shadow-xl"
-                }`}
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />
-                    Enviando...
-                  </>
-                ) : professorEmailSent ? (
-                  <>
-                    <Mail className="w-5 h-5 mr-2" />
-                    Email Enviado!
-                  </>
-                ) : (
-                  <>
-                    <Mail className="w-5 h-5 mr-2" />
-                    Enviar para Professor
                   </>
                 )}
               </button>

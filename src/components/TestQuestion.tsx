@@ -145,13 +145,13 @@ export const TestQuestion: React.FC<TestQuestionProps> = ({
               Anterior
             </button>
 
-            {/* Botão para preencher automaticamente (apenas para testes) */}
+            {/* Botão para preencher automaticamente (apenas para testes) 
             <button
               onClick={onFillAllRandomly} // Call the new prop
               className="px-4 py-2 rounded-lg font-medium bg-blue-500 text-white hover:bg-blue-600 transition-colors"
             >
               Preencher Aleatório
-            </button>
+            </button> */}
 
             <button
               onClick={onNext}
