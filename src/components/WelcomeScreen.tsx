@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   BookOpen,
   Users,
@@ -7,9 +7,7 @@ import {
   ChevronRight,
   ChevronLeft,
   User,
-  Phone,
   MapPin,
-  GraduationCap,
   Briefcase,
   MessageCircle,
   Calendar,
@@ -74,12 +72,213 @@ const countries = [
   "Outro",
 ]
 
+const countryCodes = [
+  { code: "+1", name: "Estados Unidos/Canadá" },
+  { code: "+7", name: "Rússia" },
+  { code: "+20", name: "Egito" },
+  { code: "+27", name: "África do Sul" },
+  { code: "+30", name: "Grécia" },
+  { code: "+32", name: "Bélgica" },
+  { code: "+33", name: "França" },
+  { code: "+34", name: "Espanha" },
+  { code: "+39", name: "Itália" },
+  { code: "+41", name: "Suíça" },
+  { code: "+43", name: "Áustria" },
+  { code: "+44", name: "Reino Unido" },
+  { code: "+45", name: "Dinamarca" },
+  { code: "+46", name: "Suécia" },
+  { code: "+47", name: "Noruega" },
+  { code: "+48", name: "Polônia" },
+  { code: "+49", name: "Alemanha" },
+  { code: "+51", name: "Peru" },
+  { code: "+52", name: "México" },
+  { code: "+54", name: "Argentina" },
+  { code: "+55", name: "Brasil" },
+  { code: "+56", name: "Chile" },
+  { code: "+57", name: "Colômbia" },
+  { code: "+58", name: "Venezuela" },
+  { code: "+60", name: "Malásia" },
+  { code: "+61", name: "Austrália" },
+  { code: "+62", name: "Indonésia" },
+  { code: "+63", name: "Filipinas" },
+  { code: "+65", name: "Singapura" },
+  { code: "+66", name: "Tailândia" },
+  { code: "+81", name: "Japão" },
+  { code: "+82", name: "Coreia do Sul" },
+  { code: "+84", name: "Vietnã" },
+  { code: "+86", name: "China" },
+  { code: "+90", name: "Turquia" },
+  { code: "+91", name: "Índia" },
+  { code: "+92", name: "Paquistão" },
+  { code: "+93", name: "Afeganistão" },
+  { code: "+94", name: "Sri Lanka" },
+  { code: "+95", name: "Mianmar" },
+  { code: "+211", name: "Sudão do Sul" },
+  { code: "+212", name: "Marrocos" },
+  { code: "+213", name: "Argélia" },
+  { code: "+216", name: "Tunísia" },
+  { code: "+218", name: "Líbia" },
+  { code: "+220", name: "Gâmbia" },
+  { code: "+221", name: "Senegal" },
+  { code: "+222", name: "Mauritânia" },
+  { code: "+223", name: "Mali" },
+  { code: "+224", name: "Guiné" },
+  { code: "+225", name: "Costa do Marfim" },
+  { code: "+226", name: "Burkina Faso" },
+  { code: "+227", name: "Níger" },
+  { code: "+228", name: "Togo" },
+  { code: "+229", name: "Benim" },
+  { code: "+230", name: "Maurício" },
+  { code: "+231", name: "Libéria" },
+  { code: "+232", name: "Serra Leoa" },
+  { code: "+233", name: "Gana" },
+  { code: "+234", name: "Nigéria" },
+  { code: "+235", name: "Chade" },
+  { code: "+236", name: "República Centro-Africana" },
+  { code: "+237", name: "Camarões" },
+  { code: "+238", name: "Cabo Verde" },
+  { code: "+239", name: "São Tomé e Príncipe" },
+  { code: "+240", name: "Guiné Equatorial" },
+  { code: "+241", name: "Gabão" },
+  { code: "+242", name: "Congo (República)" },
+  { code: "+243", name: "Congo (RDC)" },
+  { code: "+244", name: "Angola" },
+  { code: "+245", name: "Guiné-Bissau" },
+  { code: "+246", name: "Diego Garcia" },
+  { code: "+248", name: "Seicheles" },
+  { code: "+249", name: "Sudão" },
+  { code: "+250", name: "Ruanda" },
+  { code: "+251", name: "Etiópia" },
+  { code: "+252", name: "Somália" },
+  { code: "+253", name: "Djibuti" },
+  { code: "+254", name: "Quênia" },
+  { code: "+255", name: "Tanzânia" },
+  { code: "+256", name: "Uganda" },
+  { code: "+257", name: "Burundi" },
+  { code: "+258", name: "Moçambique" },
+  { code: "+260", name: "Zâmbia" },
+  { code: "+261", name: "Madagáscar" },
+  { code: "+262", name: "Reunião" },
+  { code: "+263", name: "Zimbábue" },
+  { code: "+264", name: "Namíbia" },
+  { code: "+265", name: "Malawi" },
+  { code: "+266", name: "Lesoto" },
+  { code: "+267", name: "Botsuana" },
+  { code: "+268", name: "Essuatíni" },
+  { code: "+269", name: "Comores" },
+  { code: "+290", name: "Santa Helena" },
+  { code: "+291", name: "Eritreia" },
+  { code: "+297", name: "Aruba" },
+  { code: "+298", name: "Ilhas Faroé" },
+  { code: "+299", name: "Groenlândia" },
+  { code: "+350", name: "Gibraltar" },
+  { code: "+352", name: "Luxemburgo" },
+  { code: "+353", name: "Irlanda" },
+  { code: "+354", name: "Islândia" },
+  { code: "+355", name: "Albânia" },
+  { code: "+356", name: "Malta" },
+  { code: "+357", name: "Chipre" },
+  { code: "+358", name: "Finlândia" },
+  { code: "+359", name: "Bulgária" },
+  { code: "+370", name: "Lituânia" },
+  { code: "+371", name: "Letônia" },
+  { code: "+372", name: "Estônia" },
+  { code: "+373", name: "Moldávia" },
+  { code: "+374", name: "Armênia" },
+  { code: "+375", name: "Bielorrússia" },
+  { code: "+376", name: "Andorra" },
+  { code: "+377", name: "Mônaco" },
+  { code: "+378", name: "San Marino" },
+  { code: "+379", name: "Vaticano" },
+  { code: "+380", name: "Ucrânia" },
+  { code: "+381", name: "Sérvia" },
+  { code: "+382", name: "Montenegro" },
+  { code: "+385", name: "Croácia" },
+  { code: "+386", name: "Eslovênia" },
+  { code: "+387", name: "Bósnia e Herzegovina" },
+  { code: "+389", name: "Macedônia do Norte" },
+  { code: "+420", name: "República Tcheca" },
+  { code: "+421", name: "Eslováquia" },
+  { code: "+423", name: "Liechtenstein" },
+  { code: "+500", name: "Ilhas Malvinas" },
+  { code: "+501", name: "Belize" },
+  { code: "+502", name: "Guatemala" },
+  { code: "+503", name: "El Salvador" },
+  { code: "+504", name: "Honduras" },
+  { code: "+505", name: "Nicarágua" },
+  { code: "+506", name: "Costa Rica" },
+  { code: "+507", name: "Panamá" },
+  { code: "+508", name: "São Pedro e Miquelão" },
+  { code: "+509", name: "Haiti" },
+  { code: "+590", name: "Guadalupe" },
+  { code: "+592", name: "Guiana" },
+  { code: "+594", name: "Guiana Francesa" },
+  { code: "+596", name: "Martinica" },
+  { code: "+597", name: "Suriname" },
+  { code: "+599", name: "Antilhas Holandesas" },
+  { code: "+591", name: "Bolívia" },
+  { code: "+593", name: "Equador" },
+  { code: "+595", name: "Paraguai" },
+  { code: "+598", name: "Uruguai" },
+  { code: "+670", name: "Timor-Leste" },
+  { code: "+672", name: "Ilha Norfolk" },
+  { code: "+673", name: "Brunei" },
+  { code: "+674", name: "Nauru" },
+  { code: "+675", name: "Papua Nova Guiné" },
+  { code: "+676", name: "Tonga" },
+  { code: "+677", name: "Ilhas Salomão" },
+  { code: "+678", name: "Vanuatu" },
+  { code: "+679", name: "Fiji" },
+  { code: "+680", name: "Palau" },
+  { code: "+681", name: "Wallis e Futuna" },
+  { code: "+682", name: "Ilhas Cook" },
+  { code: "+683", name: "Niue" },
+  { code: "+686", name: "Kiribati" },
+  { code: "+688", name: "Tuvalu" },
+  { code: "+689", name: "Polinésia Francesa" },
+  { code: "+690", name: "Tokelau" },
+  { code: "+691", name: "Micronésia" },
+  { code: "+692", name: "Ilhas Marshall" },
+  { code: "+699", name: "Pitcairn" },
+  { code: "+850", name: "Coreia do Norte" },
+  { code: "+853", name: "Macau" },
+  { code: "+855", name: "Camboja" },
+  { code: "+856", name: "Laos" },
+  { code: "+870", name: "Inmarsat SNAC" },
+  { code: "+878", name: "Serviço Universal Pessoal" },
+  { code: "+880", name: "Bangladesh" },
+  { code: "+881", name: "Sistema Global de Satélites Móveis (GMSS)" },
+  { code: "+882", name: "Redes Internacionais" },
+  { code: "+883", name: "Redes Internacionais" },
+  { code: "+886", name: "Taiwan" },
+  { code: "+888", name: "Serviços de Telecomunicações da ONU" },
+  { code: "+960", name: "Maldivas" },
+  { code: "+961", name: "Líbano" },
+  { code: "+963", name: "Síria" },
+  { code: "+964", name: "Iraque" },
+  { code: "+965", name: "Kuwait" },
+  { code: "+967", name: "Iêmen" },
+  { code: "+968", name: "Omã" },
+  { code: "+970", name: "Palestina" },
+  { code: "+971", name: "Emirados Árabes Unidos" },
+  { code: "+972", name: "Israel" },
+  { code: "+973", name: "Bahrein" },
+  { code: "+974", name: "Catar" },
+  { code: "+975", name: "Butão" },
+  { code: "+976", name: "Mongólia" },
+  { code: "+977", name: "Nepal" },
+  { code: "+979", name: "Serviços de Valor Agregado" },
+  { code: "+991", name: "Teste de Serviço Internacional" },
+  { code: "+999", name: "Serviços de Emergência" },
+]
+
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(true)
   const [userInfo, setUserInfo] = useState<UserInfo>({
     name: "",
     email: "",
+    phoneCountryCode: "+55", // Default to Brazil
     phone: "",
     birthDate: "",
     city: "",
@@ -106,6 +305,22 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
 
   const totalSteps = 6
 
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digit characters
+    const cleaned = value.replace(/\D/g, "")
+
+    // Apply a simple mask (e.g., (XX) XXXXX-XXXX or XXXX-XXXX)
+    // This is a very basic mask and might not cover all international formats.
+    // For a more robust solution, consider a dedicated library like 'libphonenumber-js'.
+    if (cleaned.length <= 10) {
+      return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")
+    } else if (cleaned.length === 11) {
+      return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
+    } else {
+      return cleaned // No specific mask for longer numbers
+    }
+  }
+
   const handleNext = () => {
     if (showWelcomeScreen) {
       setShowWelcomeScreen(false)
@@ -129,7 +344,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
   const isStepValid = () => {
     switch (currentStep) {
       case 0:
-        return userInfo.name && userInfo.email && userInfo.phone && userInfo.birthDate
+        return userInfo.name && userInfo.email && userInfo.phoneCountryCode && userInfo.phone && userInfo.birthDate
       case 1:
         return userInfo.city && userInfo.state && userInfo.country
       case 2:
@@ -182,14 +397,28 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
 
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-2">Telefone de contato *</label>
-              <input
-                type="tel"
-                required
-                className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
-                placeholder="(11) 99999-9999"
-                value={userInfo.phone}
-                onChange={(e) => setUserInfo({ ...userInfo, phone: e.target.value })}
-              />
+              <div className="flex">
+                <select
+                  required
+                  className="px-4 py-3 border border-stone-300 rounded-l-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                  value={userInfo.phoneCountryCode}
+                  onChange={(e) => setUserInfo({ ...userInfo, phoneCountryCode: e.target.value })}
+                >
+                  {countryCodes.map((country) => (
+                    <option key={country.code} value={country.code} title={country.name}>
+                      {country.code}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="tel"
+                  required
+                  className="w-full px-4 py-3 border border-stone-300 rounded-r-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                  placeholder="Seu telefone"
+                  value={formatPhoneNumber(userInfo.phone)}
+                  onChange={(e) => setUserInfo({ ...userInfo, phone: e.target.value })}
+                />
+              </div>
             </div>
 
             <div>

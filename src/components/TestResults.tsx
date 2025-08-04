@@ -70,29 +70,6 @@ Parabéns por completar o teste de inglês! Aqui estão seus resultados detalhad
 - Respostas Corretas: ${result.correctAnswers} de ${result.totalQuestions}
 - Nível Estimado: ${result.level}
 
-📈 DESEMPENHO POR SEÇÃO:
-- Gramática: ${result.sectionScores.grammar}%
-- Vocabulário: ${result.sectionScores.vocabulary}%
-- Leitura: ${result.sectionScores.reading}%
-
-✅ ACERTOS E ERROS DETALHADOS:
-`
-
-    questions.forEach((question, index) => {
-      const userAnswerIndex = userAnswers[index]
-      const isCorrect = userAnswerIndex === question.correct
-      const userAnswerText = userAnswerIndex !== undefined ? question.options[userAnswerIndex] : "Não respondido"
-      const correctAnswerText = question.options[question.correct]
-      const status = isCorrect ? "✅ CORRETA" : "❌ INCORRETA"
-
-      textContent += `
-Questão ${index + 1}: ${question.question}
-Sua Resposta: ${userAnswerText} - ${status}
-${!isCorrect ? `Resposta Correta: ${correctAnswerText}` : ""}
-`
-    })
-
-    textContent += `
 
 💡 RECOMENDAÇÕES PERSONALIZADAS:
 ${result.recommendations.map((rec) => `• ${rec}`).join("\n")}
