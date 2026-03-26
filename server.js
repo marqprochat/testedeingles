@@ -125,7 +125,7 @@ const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
 
 // Redirecionar todas as outras rotas para o index.html (SPA)
-app.get('*', (req, res, next) => {
+app.get('/*', (req, res, next) => {
   // Se for uma rota de API, ignora
   if (req.url.startsWith('/api')) return next();
   res.sendFile(path.join(distPath, 'index.html'));
