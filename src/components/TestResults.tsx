@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { TestResult, UserInfo } from "../types/test"
-import { Trophy, BookOpen, Target, Mail, Download, CheckCircle, AlertCircle, TrendingUp } from "lucide-react"
+import { Trophy, BookOpen, Target, Mail, Download, CheckCircle, TrendingUp } from "lucide-react"
 
 import { Question } from "../types/test" // Import Question type
 
@@ -17,11 +17,43 @@ export const TestResults: React.FC<TestResultsProps> = ({ result, userInfo, onRe
   const [isLoading, setIsLoading] = useState(false)
   const [professorEmailSent, setProfessorEmailSent] = useState(false)
 
+  const hasSaved = React.useRef(false)
+
   useEffect(() => {
+    if (!hasSaved.current) {
+      saveResultToFile()
+      hasSaved.current = true
+    }
+    
     if (userInfo.email && !professorEmailSent) {
       handleSendProfessorEmail()
     }
   }, [userInfo.email, professorEmailSent])
+
+  const saveResultToFile = async () => {
+    try {
+      const token = import.meta.env.VITE_POST_TOKEN || "marq-test-save-v1"
+      const response = await fetch(`http://localhost:3001/api/results?token=${token}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          result,
+          userInfo,
+          userAnswers,
+        }),
+      })
+
+      if (response.ok) {
+        console.log("Resultado salvo no servidor com sucesso!")
+      } else {
+        console.error("Falha ao salvar resultado no servidor:", response.status)
+      }
+    } catch (error) {
+      console.error("Erro ao conectar ao servidor de resultados:", error)
+    }
+  }
 
   const sendEmail = async (toEmail: string, message: string) => {
     setIsLoading(true)
@@ -173,7 +205,6 @@ ${result.recommendations.map((rec) => `- ${rec}`).join("\n")}
       alert("Erro: Email do professor não configurado.")
       return
     }
-    const emailSubject = `Resultados do Teste de Inglês - ${userInfo.name}`
     const emailBodyText = generateProfessorEmailContent()
 
     const success = await sendEmail(professorEmail, emailBodyText)
@@ -212,13 +243,6 @@ ${result.recommendations.map((rec) => `- ${rec}`).join("\n")}
       default:
         return "Nível não determinado. Continue estudando para melhorar seu nível."
     }
-  }
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-amber-600"
-    if (score >= 60) return "text-stone-600"
-    if (score >= 40) return "text-yellow-600"
-    return "text-red-600"
   }
 
   return (

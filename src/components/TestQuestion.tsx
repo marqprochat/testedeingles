@@ -109,17 +109,15 @@ export const TestQuestion: React.FC<TestQuestionProps> = ({
                   key={index}
                   onClick={() => handleAnswer(index)}
                   disabled={isAnswering}
-                  className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
-                    selectedAnswer === index
-                      ? "border-amber-500 bg-amber-50 text-amber-800"
-                      : "border-stone-200 hover:border-stone-300 hover:bg-stone-50"
-                  } ${isAnswering ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"}`}
+                  className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${selectedAnswer === index
+                    ? "border-amber-500 bg-amber-50 text-amber-800"
+                    : "border-stone-200 hover:border-stone-300 hover:bg-stone-50"
+                    } ${isAnswering ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"}`}
                 >
                   <div className="flex items-center">
                     <span
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mr-3 ${
-                        selectedAnswer === index ? "bg-amber-600 text-white" : "bg-stone-200 text-stone-600"
-                      }`}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mr-3 ${selectedAnswer === index ? "bg-amber-600 text-white" : "bg-stone-200 text-stone-600"
+                        }`}
                     >
                       {String.fromCharCode(65 + index)}
                     </span>
@@ -135,11 +133,10 @@ export const TestQuestion: React.FC<TestQuestionProps> = ({
             <button
               onClick={onPrevious}
               disabled={!canGoPrevious}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
-                canGoPrevious
-                  ? "bg-stone-100 text-stone-700 hover:bg-stone-200"
-                  : "bg-stone-50 text-stone-400 cursor-not-allowed"
-              }`}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${canGoPrevious
+                ? "bg-stone-100 text-stone-700 hover:bg-stone-200"
+                : "bg-stone-50 text-stone-400 cursor-not-allowed"
+                }`}
             >
               <ChevronLeft className="w-5 h-5 mr-2" />
               Anterior
@@ -151,16 +148,15 @@ export const TestQuestion: React.FC<TestQuestionProps> = ({
               className="px-4 py-2 rounded-lg font-medium bg-blue-500 text-white hover:bg-blue-600 transition-colors"
             >
               Preencher Aleatório
-            </button> */}
+            </button>*/}
 
             <button
               onClick={onNext}
               disabled={!canGoNext || selectedAnswer === undefined}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
-                canGoNext && selectedAnswer !== undefined
-                  ? "bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 shadow-lg hover:shadow-xl"
-                  : "bg-stone-200 text-stone-400 cursor-not-allowed"
-              }`}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${canGoNext && selectedAnswer !== undefined
+                ? "bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-700 hover:to-amber-800 shadow-lg hover:shadow-xl"
+                : "bg-stone-200 text-stone-400 cursor-not-allowed"
+                }`}
             >
               {currentIndex === totalQuestions - 1 ? "Finalizar" : "Próxima"}
               <ChevronRight className="w-5 h-5 ml-2" />

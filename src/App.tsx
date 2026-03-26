@@ -3,10 +3,12 @@ import { WelcomeScreen } from "./components/WelcomeScreen"
 import { TestQuestion } from "./components/TestQuestion"
 import { TestResults } from "./components/TestResults"
 import { MarketingPause } from "./components/MarketingPause"
+import { AdminResults } from "./components/AdminResults"
 import { useTest } from "./hooks/useTest"
 import { questions } from "./data/questions"
 
 function App() {
+  const [showAdmin, setShowAdmin] = React.useState(window.location.search.includes("admin=true"))
   const {
     currentQuestion,
     currentQuestionIndex,
@@ -26,6 +28,10 @@ function App() {
     fillAllRandomly, // Destructure the new function
     answers, // Destructure answers from useTest
   } = useTest(questions)
+
+  if (showAdmin) {
+    return <AdminResults />
+  }
 
   if (!userInfo) {
     return <WelcomeScreen onStart={startTest} />
