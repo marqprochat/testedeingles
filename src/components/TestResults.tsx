@@ -33,7 +33,8 @@ export const TestResults: React.FC<TestResultsProps> = ({ result, userInfo, onRe
   const saveResultToFile = async () => {
     try {
       const token = import.meta.env.VITE_POST_TOKEN || "marq-test-save-v1"
-      const response = await fetch(`http://localhost:3001/api/results?token=${token}`, {
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3001"
+      const response = await fetch(`${baseUrl}/api/results?token=${token}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

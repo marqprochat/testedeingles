@@ -46,7 +46,8 @@ export const AdminResults: React.FC = () => {
     setError("")
     
     try {
-      const response = await fetch(`http://localhost:3001/api/results?password=${encodeURIComponent(pwd)}`)
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3001"
+      const response = await fetch(`${baseUrl}/api/results?password=${encodeURIComponent(pwd)}`)
       if (response.ok) {
         const data = await response.json()
         setResults(data.reverse())
@@ -135,7 +136,8 @@ export const AdminResults: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/api/results/${createdAt}?password=${encodeURIComponent(password)}`, {
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3001"
+      const response = await fetch(`${baseUrl}/api/results/${createdAt}?password=${encodeURIComponent(password)}`, {
         method: "DELETE"
       })
 
