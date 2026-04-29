@@ -1,0 +1,31 @@
+services:
+  testedeingles:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_EMAIL_API_ENDPOINT: ${VITE_EMAIL_API_ENDPOINT}
+        VITE_PROFESSOR_EMAIL: ${VITE_PROFESSOR_EMAIL}
+        VITE_POST_TOKEN: ${VITE_POST_TOKEN}
+        VITE_API_URL: ${VITE_API_URL}
+    container_name: testedeingles
+    restart: unless-stopped
+    ports:
+      - "21090:21090"
+    environment:
+      - PORT=21090
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - POST_TOKEN=${POST_TOKEN}
+      - NODE_ENV=production
+    volumes:
+      - testedeingles_data:/app/database
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:21090/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  testedeingles_data:
+    driver: local
