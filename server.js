@@ -11,7 +11,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 21090;
+console.log('Ambiente PORT:', process.env.PORT);
 
 // Configurações de Segurança
 const RESULTS_FILE = path.join(__dirname, 'database', 'results.json');
@@ -124,6 +125,11 @@ app.delete('/api/results/:createdAt', async (req, res) => {
 const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
 
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', port: PORT, envPort: process.env.PORT });
+});
+
 // Redirecionar todas as outras rotas para o index.html (SPA)
 app.get('/*', (req, res, next) => {
   // Se for uma rota de API, ignora
@@ -132,6 +138,11 @@ app.get('/*', (req, res, next) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`-----------------------------------------`);
+  console.log(`Servidor iniciado com sucesso!`);
+  console.log(`Rodando na porta: ${PORT}`);
+  console.log(`URL local: http://0.0.0.0:${PORT}`);
+  console.log(`Data/Hora: ${new Date().toLocaleString()}`);
+  console.log(`-----------------------------------------`);
   ensureResultsFile();
 });
