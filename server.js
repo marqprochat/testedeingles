@@ -131,7 +131,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Redirecionar todas as outras rotas para o index.html (SPA)
-app.get('/*', (req, res, next) => {
+app.get('/{*splat}', (req, res, next) => {
   // Se for uma rota de API, ignora
   if (req.url.startsWith('/api')) return next();
   res.sendFile(path.join(distPath, 'index.html'));
